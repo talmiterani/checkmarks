@@ -1,0 +1,49 @@
+{
+  "name": "web-dites-outreach",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && webpack --mode production",
+    "dev": "webpack serve --mode development"
+  },
+  "author": "Tal Miterani tal@careboxhealth.com",
+  "license": "ISC",
+  "@comment devDependencies": [
+    "These are the comments for the `dependencies` section.",
+    "The name of the section being commented is included in the key after the `@comment` 'annotation' to ensure the keys are unique.",
+    {
+      "vue": "vuetify version 2 does not support vue 3, this is why we use last version of vue 2",
+      "vue-loader": "version 16+ is for vue 3",
+      "webpack": "wevpack vesion 5+ probably works only with vew-loader version 16+, this impact html-webpack-plugin,as wepack-cli, webpack-der-server, css-loader, sass-loader vesions as well",
+      "url-loader": "version +3 if compatible with npm version +7 (more advanced version of node)"
+    }
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.18.9",
+    "@babel/preset-env": "^7.18.9",
+    "babel-loader": "^8.2.5",
+    "css-loader": "4.3",
+    "deepmerge": "^4.2.2",
+    "html-webpack-plugin": "^4.5.2",
+    "rimraf": "^3.0.2",
+    "sass": "~1.32",
+    "sass-loader": "^10.1.1",
+    "url-loader": "^2.3.0",
+    "vue": "^2.7.8",
+    "vue-loader": "^15.10.0",
+    "vue-style-loader": "^4.1.3",
+    "vue-template-compiler": "^2.7.8",
+    "webpack": "4.46",
+    "webpack-cli": "4.10",
+    "webpack-dev-server": "^4.10.0"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "copy-webpack-plugin": "^5.1.2",
+    "vue-i18n": "^8.27.2",
+    "vue-router": "^3.5.4",
+    "vuetify": "^2.6.7"
+  }
+}
