@@ -1,6 +1,7 @@
 import axios from 'axios';
-import {TrialApi} from "../TrialApi";
-import {GlobalApi} from "../globalApi";
+import {UserApi} from "../userApi";
+import {CommentApi} from "../commentApi";
+import {PostApi} from "../postApi";
 
 
 export function apiFactory() {
@@ -12,9 +13,9 @@ export function apiFactory() {
     });
 
     return {
-        trial: new TrialApi($http),
-        global: new GlobalApi($http)
-
+        user: new UserApi($http),
+        post: new PostApi($http),
+        comment: new CommentApi($http)
     }
 
 }
