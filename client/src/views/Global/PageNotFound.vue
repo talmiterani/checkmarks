@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <Logo/>
     <v-row class="mt-15">
       <v-col class="d-flex justify-center align-center">
         <div class="display-3">{{ message || $t('pageNotFound') }}</div>

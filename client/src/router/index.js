@@ -1,18 +1,48 @@
 import Router from 'vue-router'
-import SiteForm from "../views/Site/SiteForm";
 import {globalRoutes} from "../services/routes/consts";
 import PageNotFound from "../views/Global/PageNotFound";
 import Vue from 'vue'
 import i18n from "../locallization/i18n";
+import SignUp from "../components/Users/SignUp.vue";
+import Login from "../components/Users/Login.vue";
+import PostsList from "../components/Posts/PostsList.vue";
+import PostView from "../components/Posts/PostView.vue";
 
 Vue.use(Router)
 
 const routes = [
     {
-        path: '/:languageCode',
-        name: globalRoutes.siteForm,
-        component: SiteForm
+        path: '/login',
+        name: globalRoutes.login,
+        component: Login
     },
+    {
+        path: '/signup',
+        name: globalRoutes.signUp,
+        component: SignUp
+    },
+    {
+        path: '/',
+        redirect: '/posts', // Redirect root path to '/posts'
+    },
+    {
+        path: '/posts',
+        name: globalRoutes.posts,
+        component: PostsList,
+    },
+    {
+        path: '/posts/:post_id',
+        name: globalRoutes.post,
+        component: PostView,
+    },
+    // {
+    //     path: '/:languageCode',
+    //     name: globalRoutes.siteForm,
+    //     component: SiteForm,
+    //     children: [
+    //         ]
+    // },
+
     {
         path: '*',
         name: globalRoutes.notFound,

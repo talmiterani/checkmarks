@@ -1,0 +1,103 @@
+<template>
+  <div class="py-2 px-8">
+    <v-navigation-drawer v-model="drawer" absolute temporary>
+      <v-list>
+        <v-list-item
+            v-for="item in menuItems"
+            :key="item.title"
+            :to="item.path"
+        >
+          <v-list-item-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>{{ item.title }}</v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-app-bar flat color="white">
+      <v-app-bar-nav-icon :style="{ color: 'primary' }"  @click.stop="drawer = !drawer" class="d-md-none"/>
+      <v-row align="center" no-gutters>
+        <v-col xl="8" lg="6" md="4" sm="4" xs="2">
+          <Logo/>
+        </v-col>
+        <v-spacer class="d-md-none d-sm-none  d-xs-none"/>
+        <v-col xl="4" lg="6" md="5" sm="6" xs="7">
+          <v-row align="center">
+            <v-col>
+              <v-text-field
+                  dense
+                  hide-details
+                  filled
+                  rounded
+                  :label="$t('search')"
+                  :prepend-inner-icon="magnifyIcon"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="auto" class="d-none d-md-flex">
+              <v-btn
+                  rounded
+                  color="primary"
+                  text
+                  @click="$router.push({name: globalRoutes.login})"
+              >
+                {{ $t('user.login') }}
+              </v-btn>
+            </v-col>
+            <v-col cols="auto" class="d-none d-md-flex">
+              <v-btn
+                  rounded
+                  color="primary"
+                  @click="$router.push({name: globalRoutes.signUp})"
+              >
+                {{ $t('user.sign_up') }}
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-app-bar>
+  </div>
+</template>
+
+
+<script>
+import Logo from "../../views/Global/Logo.vue";
+import { mdiAccount, mdiLogin , mdiMagnify} from '@mdi/js'
+import {globalRoutes} from "../../services/routes/consts";
+
+export default {
+  name: "Navbar",
+  computed: {
+    globalRoutes() {
+      return globalRoutes
+    }
+  },
+  components: {Logo},
+  data() {
+    return {
+      magnifyIcon: mdiMagnify,
+      drawer: false,
+      menuItems: [
+        {title: this.$t('user.login'), path: "/login", icon: mdiLogin},
+        {title: this.$t('user.sign_up'), path: "/signup", icon: mdiAccount},
+      ],
+    };
+  },
+}
+
+</script>
+
+
+<style scoped>
+.d-lg-none {
+  display: none !important;
+}
+
+.d-none {
+  display: none !important;
+}
+
+.d-md-flex {
+  display: flex !important;
+}
+</style>

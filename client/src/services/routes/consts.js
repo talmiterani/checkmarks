@@ -1,4 +1,8 @@
 export const globalRoutes = {
     siteForm: "SiteForm",
-    notFound: "NotFound"
+    notFound: "NotFound",
+    login: "Login",
+    signUp: "SignUp",
+    posts: "Posts",
+    post: "post"
 };

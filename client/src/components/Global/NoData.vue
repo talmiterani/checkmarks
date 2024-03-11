@@ -3,7 +3,7 @@
   <v-row  justify="center">
     <v-col  md="auto">
       <v-btn outlined rounded x-large color="warning">
-        No Data
+        {{$t('no_data')}}
       </v-btn>
     </v-col>
   </v-row>
