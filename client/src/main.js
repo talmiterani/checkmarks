@@ -6,7 +6,6 @@ import {apiFactory, RegisterApi} from './services/api/axios/axios';
 import {EventBusPlugin} from "./plugins/eventBus";
 import router, {setLocalLang} from './router/index'
 import i18n from "./locallization/i18n";
-import {globalService} from "./services/globalService";
 
 
 Vue.use(Vuetify)
@@ -14,11 +13,6 @@ Vue.use(Vuetify)
 const $api = apiFactory();
 Vue.use(RegisterApi($api));
 Vue.use(EventBusPlugin);
-Vue.filter('formatDate', function(value) {
-    if (value) {
-        return moment(String(value)).format($configService.getDatetimeformat(globalService.FORMAT_TYPES.FORMAT));
-    }
-});
 
 setLocalLang(router)
 

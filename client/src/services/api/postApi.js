@@ -1,22 +1,43 @@
+import {methods} from "./axios/axios";
+
 class PostApi {
     constructor($http) {
         this.$http = $http;
     }
 
-    async login(payload) {
+    async search(payload) {
         return await this.$http({
-            url: '/users/login',
-            method: 'POST',
+            url: '/v1/posts/search',
+            method: methods.post,
             data: JSON.stringify(payload)
+        })
+    }
+    async get(postId) {
+        return await this.$http({
+            url: `/v1/posts/post/${postId}`,
+            method: methods.get,
+        })
+    }
+    async add(payload) {
+        return await this.$http({
+            url: '/v1/posts',
+            method: methods.post,
+            data: JSON.stringify(payload)
+        })
+    }
+    async update(payload) {
+        return await this.$http({
+            url: '/v1/posts',
+            method: methods.put,
+            data: JSON.stringify(payload)
+        })
+    }
+    async remove(postId) {
+        return await this.$http({
+            url: `/v1/posts/post/${postId}`,
+            method: methods.delete,
         })
     }
 
-    async signup(payload) {
-        return await this.$http({
-            url: '/users/signup',
-            method: 'POST',
-            data: JSON.stringify(payload)
-        })
-    }
 }
 export {PostApi}

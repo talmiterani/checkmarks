@@ -1,131 +1,103 @@
 <template>
   <div>
-    <v-container class="mt-12">
-      <div v-for="(post, index) in filteredPosts" :key="post.id">
-        <v-divider v-if="index" class="my-5"/>
-        <PostCard
-            :post="post"
-        />
-      </div>
+    <v-container>
 
+      <v-row align="center">
+        <v-col>
+          <v-text-field
+              v-model="query"
+              dense
+              hide-details
+              filled
+              rounded
+              :label="$t('search')"
+              :prepend-inner-icon="magnifyIcon"
+              @input="search"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="auto">
+          <AddEditPost
+              ref="add"
+              @added="search"
+          />
+<!--          <v-btn-->
+<!--              rounded-->
+<!--              color="primary"-->
+<!--              @click="$refs.add.show()"-->
+<!--          >-->
+<!--            {{ $t('user.add', {field: $tc('post.post', 1)}) }}-->
+<!--          </v-btn>-->
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12" v-for="post in posts" :key="post.id">
+          <PostCard
+              :post="post"
+          />
+        </v-col>
+      </v-row>
     </v-container>
-    <v-container class="text-center">
+    <v-container class="text-center" v-if="posts.length">
       <v-pagination
           v-model="page"
           :length="pages"
           circle
       ></v-pagination>
     </v-container>
+    <PageNotFound :message="$t('post.not_found')"/>
+
   </div>
 </template>
 
 <script>
 import PostCard from "./PostCard.vue";
 import {globalService} from "../../services/globalService";
+import {mdiMagnify} from "@mdi/js";
+import PageNotFound from "../../views/Global/PageNotFound.vue";
+import AddEditPost from "./AddEditPost.vue";
 
 export default {
   name: "PostsList",
-  components: {PostCard},
+  components: {AddEditPost, PageNotFound, PostCard},
+  created() {
+    this.search()
+  },
+
 
   data() {
     return {
+      magnifyIcon: mdiMagnify,
       page: 1,
-      posts: [
-        {
-          id: "1",
-          avatar: "TM",
-          author: "Tal Miterani",
-          updated: "2024-03-09T20:06:12.066+00:00",
-          content: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-          title: "Hi Guys!",
-          comments_count: "42"
-        },
-        {
-          id: "2",
-          avatar: "LM",
-          author: "Lee Miterani",
-          updated: "2024-04-09T20:06:12.066+00:00",
-          content: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-          title: "Hi Guys!",
-          comments_count: "11"
-        },
-        {
-          id: "3",
-          avatar: "MM",
-          author: "Maayan Miterani",
-          updated: "2024-02-09T20:06:12.066+00:00",
-          content: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-          title: "Hi Guys!",
-          comments_count: "1"
-        },
-        {
-          id: "4",
-          avatar: "TM",
-          author: "Tal Miterani",
-          updated: "2024-03-09T20:06:12.066+00:00",
-          content: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-          title: "Hi Guys!",
-          comments_count: "42"
-        },
-        {
-          id: "5",
-          avatar: "LM",
-          author: "Lee Miterani",
-          updated: "2024-04-09T20:06:12.066+00:00",
-          content: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-          title: "Hi Guys!",
-          comments_count: "11"
-        },
-        {
-          id: "6",
-          avatar: "MM",
-          author: "Maayan Miterani",
-          updated: "2024-02-09T20:06:12.066+00:00",
-          content: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-          title: "Hi Guys!",
-          comments_count: "1"
-        },
-        {
-          id: "7",
-          avatar: "TM",
-          author: "Tal Miterani",
-          updated: "2024-03-09T20:06:12.066+00:00",
-          content: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-          title: "Hi Guys!",
-          comments_count: "42"
-        },
-        {
-          id: "8",
-          avatar: "LM",
-          author: "Lee Miterani",
-          updated: "2024-04-09T20:06:12.066+00:00",
-          content: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-          title: "Hi Guys!",
-          comments_count: "11"
-        },
-        {
-          id: "9",
-          avatar: "MM",
-          author: "Maayan Miterani",
-          updated: "2024-02-09T20:06:12.066+00:00",
-          content: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-          title: "Hi Guys!",
-          comments_count: "1"
-        }
-      ],
+      query: "",
+      posts: [],
+      loading: true
     }
   },
   computed: {
+    pageSize() {
+      return globalService.PAGE_SIZE_LIST
+    },
     pages() {
-      return Math.ceil(this.posts.length / globalService.PAGE_SIZE_LIST);
-    },
-    filteredPosts() {
-      return this.posts.slice(((this.page - 1) * globalService.PAGE_SIZE_LIST), this.page *globalService.PAGE_SIZE_LIST)
-    },
+      return Math.ceil(this.posts.length / this.pageSize);
+    }
   },
   methods: {
-    search() {
-      this.filteredPosts[0] = this.posts[this.page]
+    async search() {
+      try {
+        this.loading = true
+        const payload = {
+          page: this.page,
+          page_size: this.pageSize,
+          query: this.query
+        }
+        const{data} = await this.$api.post.search(payload)
+        this.posts = data || []
+      } catch (error) {
+
+      } finally {
+        this.loading = false
+      }
     }
   }
 }

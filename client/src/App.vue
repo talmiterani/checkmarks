@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Navbar/>
-    <v-divider class="mt-1 divider"/>
+    <v-divider class="mt-1 divider mb-12"/>
     <v-main>
       <router-view/>
     </v-main>

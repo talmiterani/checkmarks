@@ -1,25 +1,24 @@
 <template>
-  <v-card flat>
-    <v-row align="center">
-      <v-col cols="auto">
-        <v-avatar color="red">
-          <span class="white--text text-h5">CJ</span>
-        </v-avatar>
-      </v-col>
-      <v-col cols="auto" class="font-weight-black">
-        {{ post.author }}
-      </v-col>
-      <div class="grey--text text--darken-1"  v-html="`'&bull;&nbsp;&nbsp;${parsedUpdated}`"/>
-    </v-row>
-
+  <v-hover v-slot="{ hover }">
+  <v-card @click="goToPost"
+          :elevation="hover ? 10 : 5"
+          :class="{ 'on-hover': hover }"
+          class="pa-4"
+          :max-height="250"
+  >
+    <UpdatedBy
+        user="CJ"
+        :author="post.author"
+        :updated="post.updated"
+    />
     <v-row>
-      <v-col>
+      <v-col class="text-truncate font-weight-black">
         {{ post.title }}
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col>
+      <v-col class="text-truncate">
         {{ post.content }}
       </v-col>
     </v-row>
@@ -29,22 +28,22 @@
         <v-icon  color="grey darken-1"> {{ commentIcon }}</v-icon>
       </v-col>
       <div class="grey--text text--darken-1">
-      {{ `${post.comments_count} ${$tc('user.comment', 2)}`}}
+      {{ `${post.comments_cnt} ${$tc('comment.comment', 2)}`}}
       </div>
     </v-row>
 
   </v-card>
+  </v-hover>
 </template>
 
 <script>
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import {mdiCommentOutline} from "@mdi/js";
-
-dayjs.extend(relativeTime);
+import {globalRoutes} from "../../services/routes/consts";
+import UpdatedBy from "../Global/UpdatedBy.vue";
 
 export default {
   name: "PostCard",
+  components: {UpdatedBy},
   props: {
     post: Object,
   },
@@ -52,9 +51,15 @@ export default {
     commentIcon() {
       return mdiCommentOutline
     },
-    parsedUpdated() {
-      const currentDate = dayjs();
-      return dayjs(this.post.updated).from(currentDate);
+  },
+  methods: {
+    goToPost() {
+      this.$router.push({
+        name: globalRoutes.post,
+        params: {
+          post_id: this.post.id
+        }
+      });
     }
   }
 }

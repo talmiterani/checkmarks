@@ -23,16 +23,6 @@
         <v-spacer class="d-md-none d-sm-none  d-xs-none"/>
         <v-col xl="4" lg="6" md="5" sm="6" xs="7">
           <v-row align="center">
-            <v-col>
-              <v-text-field
-                  dense
-                  hide-details
-                  filled
-                  rounded
-                  :label="$t('search')"
-                  :prepend-inner-icon="magnifyIcon"
-              ></v-text-field>
-            </v-col>
             <v-col cols="auto" class="d-none d-md-flex">
               <v-btn
                   rounded
@@ -62,7 +52,7 @@
 
 <script>
 import Logo from "../../views/Global/Logo.vue";
-import { mdiAccount, mdiLogin , mdiMagnify} from '@mdi/js'
+import { mdiAccount, mdiLogin} from '@mdi/js'
 import {globalRoutes} from "../../services/routes/consts";
 
 export default {
@@ -75,7 +65,6 @@ export default {
   components: {Logo},
   data() {
     return {
-      magnifyIcon: mdiMagnify,
       drawer: false,
       menuItems: [
         {title: this.$t('user.login'), path: "/login", icon: mdiLogin},
