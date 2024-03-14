@@ -100,7 +100,6 @@ export default {
 
       try {
         this.saving = true
-        console.log("Sdfsdf")
         const payload = {
           author: this.currentItem.author.trim(),
           title: this.currentItem.title.trim(),

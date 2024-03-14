@@ -50,7 +50,6 @@
               filled
               rounded
               :label="$t('comment.write_comment')"
-              append-icon=""
           >
             <template v-slot:prepend-inner>
               <v-avatar color="red" class="mr-2">
@@ -77,6 +76,8 @@
         <v-divider v-if="index" class="mt-5 mb-8"/>
         <CommentCard
             :comment="comment"
+            @updated="update($event, index)"
+            @removed="remove(index)"
         />
       </v-col>
     </v-row>
@@ -131,6 +132,12 @@ export default {
       this.$router.push({
         name: globalRoutes.posts,
       });
+    },
+    remove(index) {
+      this.post.comments.splice(index, 1)
+    },
+    update(comment, index) {
+      this.$set(this.post.comments, index, comment)
     },
     async addComment() {
       try {

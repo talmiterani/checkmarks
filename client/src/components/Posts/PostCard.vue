@@ -69,7 +69,7 @@
     <ConfirmDialog
         :on-confirm="remove"
         ref="confirm"
-        :message="$t('user.confirm_remove', {field: $tc('post.post', 1)})"
+        :message="$t('user.confirm_remove', {field: $tc('post.post', 1).toLowerCase()})"
     />
   </v-card>
   </v-hover>
@@ -106,8 +106,24 @@ export default {
         }
       });
     },
-    remove(){
+    async remove() {
+      let success = false;
+      try {
+        await this.$api.post.remove(this.post.id)
+        this.$emit('search')
+        success = true;
+        this.$eventBus.$emit("toastMessageHandler", {
+          message: this.$t('user.removed', {field: this.$tc('post.post', 1)}),
+          type: "info"
+        });
+      } catch (e) {
+        this.$eventBus.$emit('toastMessageHandler', {
+          message: this.$t('general.something_went_wrong'),
+          type: 'error'
+        });
+      }
 
+      return success;
     }
   }
 }

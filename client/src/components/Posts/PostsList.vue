@@ -40,7 +40,7 @@
           v-model="page"
           :length="pages"
           circle
-      ></v-pagination>
+      />
     </v-container>
     <PageNotFound v-if="!posts.length && !loading" :message="$t('post.not_found')"/>
     <AddEditPost

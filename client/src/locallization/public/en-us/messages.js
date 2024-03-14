@@ -35,6 +35,7 @@ const messages = {
     comment: {
         comment: "Comment | comments",
         write_comment: "Write a comment",
+        content: "Content"
     },
 
     rules: {
