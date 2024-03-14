@@ -12,17 +12,24 @@ const messages = {
         login: "Login",
         sign_up: "Sign up",
         add: "Add {field}",
-        update: "Update {field}",
+        edit: "Edit {field}",
         remove: "Remove {field}",
         saved: "{field} saved",
         removed: "{field} removed",
         save: "Save",
-        close: "close"
+        close: "Close",
+        yes: "Yes",
+        no: "No",
+        confirm_title: "Confirm remove",
+        confirm_remove: "Are you sure you want to remove this {field}",
     },
 
     post: {
-        post: "post | posts",
-        not_found: "Post not found"
+        post: "Post | Posts",
+        not_found: "Post not found",
+        author: "Author",
+        title: "Title",
+        content: "Content"
     },
 
     comment: {
@@ -31,7 +38,7 @@ const messages = {
     },
 
     rules: {
-        required: "required",
+        required: "Required",
         confirm_password: "Passwords are not identical"
     }
 }

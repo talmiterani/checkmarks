@@ -33,42 +33,45 @@
       </v-col>
     </v-row>
 
-    <v-row class="grey--text text--darken-1">
-      <v-col>
-        {{ $tc('comment.comment', 2) }}
-      </v-col>
-    </v-row>
+    <v-divider class="mt-10 mb-5 divider"/>
+    <v-container>
+      <v-row class="grey--text text--darken-1">
+        <v-col>
+          {{ $tc('comment.comment', 2) }}
+        </v-col>
+      </v-row>
 
-    <v-row align="center">
-      <v-col>
-        <v-text-field
-            v-model="content"
-            dense
-            hide-details
-            filled
-            rounded
-            :label="$t('comment.write_comment')"
-            append-icon=""
-        >
-          <template v-slot:prepend-inner>
-            <v-avatar color="red" class="mr-2">
-              <span class="white--text text-h5">TM</span>
-            </v-avatar>
-          </template>
-        </v-text-field>
+      <v-row align="center">
+        <v-col>
+          <v-text-field
+              v-model="content"
+              dense
+              hide-details
+              filled
+              rounded
+              :label="$t('comment.write_comment')"
+              append-icon=""
+          >
+            <template v-slot:prepend-inner>
+              <v-avatar color="red" class="mr-2">
+                <span class="white--text text-h5">TM</span>
+              </v-avatar>
+            </template>
+          </v-text-field>
 
-      </v-col>
-      <v-col cols="auto">
-        <v-btn
-            rounded
-            color="primary"
-            @click="addComment"
-            :disabled="!(content || '').trim() || addingComment"
-        >
-          {{ $t('user.add', {field: $tc('comment.comment', 1)}) }}
-        </v-btn>
-      </v-col>
-    </v-row>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn
+              rounded
+              color="primary"
+              @click="addComment"
+              :disabled="!(content || '').trim() || addingComment"
+          >
+            {{ $t('user.add', {field: $tc('comment.comment', 1)}) }}
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
     <v-row v-for="(comment, index) in (post || {}).comments" :key="comment.id">
       <v-col>
         <v-divider v-if="index" class="mt-5 mb-8"/>

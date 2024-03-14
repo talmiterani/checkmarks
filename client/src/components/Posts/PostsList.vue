@@ -16,17 +16,13 @@
           ></v-text-field>
         </v-col>
         <v-col cols="auto">
-          <AddEditPost
-              ref="add"
-              @added="search"
-          />
-<!--          <v-btn-->
-<!--              rounded-->
-<!--              color="primary"-->
-<!--              @click="$refs.add.show()"-->
-<!--          >-->
-<!--            {{ $t('user.add', {field: $tc('post.post', 1)}) }}-->
-<!--          </v-btn>-->
+          <v-btn
+              rounded
+              color="primary"
+              @click="$refs.add.show()"
+          >
+            {{ $t('user.add', {field: $tc('post.post', 1).toLowerCase()}) }}
+          </v-btn>
         </v-col>
       </v-row>
 
@@ -34,6 +30,7 @@
         <v-col cols="12" v-for="post in posts" :key="post.id">
           <PostCard
               :post="post"
+              @search="search"
           />
         </v-col>
       </v-row>
@@ -45,8 +42,11 @@
           circle
       ></v-pagination>
     </v-container>
-    <PageNotFound :message="$t('post.not_found')"/>
-
+    <PageNotFound v-if="!posts.length && !loading" :message="$t('post.not_found')"/>
+    <AddEditPost
+        ref="add"
+        @saved="search"
+    />
   </div>
 </template>
 

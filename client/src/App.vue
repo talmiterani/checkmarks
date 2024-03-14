@@ -21,7 +21,7 @@ export default {
   components: {Navbar, Toast}
 };
 </script>
-<style scoped>
+<style>
 .divider {
   border-top-width: 2px !important; /* Adjust the thickness as needed */
   background-color: black; /* Change the color if needed */
