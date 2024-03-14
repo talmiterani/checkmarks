@@ -24,7 +24,7 @@
                   type="password"
                   required
                   :rules="[value => !!(value || '').trim() || $t('rules.required'),
-                         value => value === confirmPassword || $t('rules.confirm_password')]"
+                         value => !confirmPassword || value === confirmPassword || $t('rules.confirm_password')]"
               />
             </v-col>
           </v-row>
@@ -36,7 +36,7 @@
                   type="password"
                   required
                   :rules="[value => !!(value || '').trim() || $t('rules.required'),
-                         value => value === password || $t('rules.confirm_password')]"
+                         value => !password || value === password || $t('rules.confirm_password')]"
               />
             </v-col>
           </v-row>

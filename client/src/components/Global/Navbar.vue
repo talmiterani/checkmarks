@@ -1,6 +1,37 @@
 <template>
   <div class="py-2 px-8">
-    <v-navigation-drawer v-model="drawer" absolute temporary>
+
+    <v-app-bar flat color="white">
+      <v-row align="center" no-gutters>
+        <v-col cols="auto">
+          <Logo/>
+        </v-col>
+        <v-spacer/>
+        <v-col cols="auto" class="d-none d-md-flex">
+          <v-btn
+              rounded
+              color="primary"
+              text
+              @click="$router.push({name: globalRoutes.login})"
+          >
+            {{ $t('user.login') }}
+          </v-btn>
+        </v-col>
+        <v-col cols="auto" class="d-none d-md-flex">
+          <v-btn
+              rounded
+              color="primary"
+              @click="$router.push({name: globalRoutes.signUp})"
+          >
+            {{ $t('user.sign_up') }}
+          </v-btn>
+        </v-col>
+        <v-col cols="auto" class="d-md-none">
+          <v-app-bar-nav-icon  @click.stop="drawer = !drawer" />
+        </v-col>
+      </v-row>
+    </v-app-bar>
+    <v-navigation-drawer v-model="drawer" absolute temporary right>
       <v-list>
         <v-list-item
             v-for="item in menuItems"
@@ -14,45 +45,13 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar flat color="white">
-      <v-app-bar-nav-icon :style="{ color: 'primary' }"  @click.stop="drawer = !drawer" class="d-md-none"/>
-      <v-row align="center" no-gutters>
-        <v-col xl="8" lg="6" md="4" sm="4" xs="2">
-          <Logo/>
-        </v-col>
-        <v-spacer class="d-md-none d-sm-none  d-xs-none"/>
-        <v-col xl="4" lg="6" md="5" sm="6" xs="7">
-          <v-row align="center">
-            <v-col cols="auto" class="d-none d-md-flex">
-              <v-btn
-                  rounded
-                  color="primary"
-                  text
-                  @click="$router.push({name: globalRoutes.login})"
-              >
-                {{ $t('user.login') }}
-              </v-btn>
-            </v-col>
-            <v-col cols="auto" class="d-none d-md-flex">
-              <v-btn
-                  rounded
-                  color="primary"
-                  @click="$router.push({name: globalRoutes.signUp})"
-              >
-                {{ $t('user.sign_up') }}
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-app-bar>
   </div>
 </template>
 
 
 <script>
 import Logo from "../../views/Global/Logo.vue";
-import { mdiAccount, mdiLogin} from '@mdi/js'
+import {mdiAccount, mdiLogin} from '@mdi/js'
 import {globalRoutes} from "../../services/routes/consts";
 
 export default {

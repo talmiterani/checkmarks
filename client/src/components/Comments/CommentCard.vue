@@ -1,7 +1,7 @@
 <template>
   <v-card class="pa-4" flat>
     <v-row>
-      <v-col>
+      <v-col cols="auto">
         <UpdatedBy
             user="CJ"
             :author="comment.author"
