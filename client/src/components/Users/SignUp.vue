@@ -13,6 +13,8 @@
                   :label="$t('user.username')+'*'"
                   required
                   :rules="[value => !!(value || '').trim() || $t('rules.required')]"
+                  :error-messages="uniqueMessage"
+                  @input="isUnique = true"
               />
             </v-col>
           </v-row>
@@ -22,6 +24,7 @@
                   v-model="password"
                   :label="$t('user.password')+'*'"
                   type="password"
+                  autocomplete="on"
                   required
                   :rules="[value => !!(value || '').trim() || $t('rules.required'),
                          value => !confirmPassword || value === confirmPassword || $t('rules.confirm_password')]"
@@ -34,6 +37,7 @@
                   v-model="confirmPassword"
                   :label="$t('user.confirm_password')+'*'"
                   type="password"
+                  autocomplete="on"
                   required
                   :rules="[value => !!(value || '').trim() || $t('rules.required'),
                          value => !password || value === password || $t('rules.confirm_password')]"
@@ -41,7 +45,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col class="text-xs-center mt-5">
+            <v-col class="text-xs-center">
               <v-btn color="primary" type="submit" :disabled="!canSign || loading" @click="signUp">
                 {{ $t('user.sign_up') }}
               </v-btn>
@@ -54,6 +58,9 @@
 </template>
 
 <script>
+import {globalRoutes} from "../../services/routes/consts";
+import {useUserStore} from "../../stores/userStore";
+
 export default {
   name: "SignUp",
   data() {
@@ -61,12 +68,16 @@ export default {
       username: "",
       password: "",
       confirmPassword: "",
-      loading: false
+      loading: false,
+      isUnique: true
     }
   },
   computed: {
     canSign() {
-      return !!this.username && !!this.password && this.confirmPassword === this.password;
+      return !!this.username && !!this.password && this.confirmPassword === this.password && this.isUnique;
+    },
+    uniqueMessage() {
+      return !this.isUnique ? this.$t('user.username_exists') : ""
     }
   },
   methods: {
@@ -77,16 +88,31 @@ export default {
           username: this.username.trim(),
           password: this.password.trim()
         }
-        await this.$api.user.signup(payload)
-        this.$eventBus.$emit('toastMessageHandler', {
-          message: this.$t('saved'),
-          type: 'info'
+        const {data} = await this.$api.user.signup(payload)
+
+        const token = (data || {}).token;
+        const userId = (data || {}).userId;
+
+        useUserStore.dispatch('setToken', token)
+        useUserStore.dispatch('setUserId', userId)
+        localStorage.setItem('token', token);
+        localStorage.setItem('userId', userId);
+
+        this.isUnique = true
+        this.$router.push({
+          name: globalRoutes.posts,
         });
       } catch (error) {
-        this.$eventBus.$emit('toastMessageHandler', {
-          message: this.$t('something_went_wrong'),
-          type: 'error'
-        });
+        if (error.response.status === 409) {
+          this.isUnique = false;
+        } else {
+          this.$eventBus.$emit('toastMessageHandler', {
+            message: this.$t('something_went_wrong'),
+            type: 'error'
+          });
+        }
+      } finally {
+        this.loading = false
       }
     }
   }

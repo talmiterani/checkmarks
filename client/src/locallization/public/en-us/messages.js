@@ -7,10 +7,13 @@ const messages = {
     back_to: "Back to {field}",
     user: {
         username: "Username",
+        username_exists: "Username is already exists",
         password: "Password",
         confirm_password: "Confirm password",
+        incorrect_user_data: "Username or password incorrect",
         login: "Login",
         sign_up: "Sign up",
+        logout: "Logout",
         add: "Add {field}",
         edit: "Edit {field}",
         remove: "Remove {field}",

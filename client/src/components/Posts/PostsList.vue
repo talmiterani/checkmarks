@@ -15,7 +15,7 @@
               @input="search"
           ></v-text-field>
         </v-col>
-        <v-col cols="auto">
+        <v-col cols="auto" v-if="loggedIn">
           <v-btn
               rounded
               color="primary"
@@ -44,6 +44,7 @@
     </v-container>
     <PageNotFound v-if="!posts.length && !loading" :message="$t('post.not_found')"/>
     <AddEditPost
+        v-if="loggedIn"
         ref="add"
         @saved="search"
     />
@@ -56,6 +57,7 @@ import {globalService} from "../../services/globalService";
 import {mdiMagnify} from "@mdi/js";
 import PageNotFound from "../../views/Global/PageNotFound.vue";
 import AddEditPost from "./AddEditPost.vue";
+import {useUserStore} from "../../stores/userStore";
 
 export default {
   name: "PostsList",
@@ -80,7 +82,10 @@ export default {
     },
     pages() {
       return Math.ceil(this.posts.length / this.pageSize);
-    }
+    },
+    loggedIn() {
+      return !!useUserStore.getters.getToken
+    },
   },
   methods: {
     async search() {

@@ -7,23 +7,32 @@
           <Logo/>
         </v-col>
         <v-spacer/>
-        <v-col cols="auto" class="d-none d-md-flex">
+        <v-col v-if="!loggedIn" cols="auto" class="d-none d-md-flex">
           <v-btn
               rounded
               color="primary"
               text
-              @click="$router.push({name: globalRoutes.login})"
+              @click="$router.push({name: globalRoutes.login}).catch(() => {})"
           >
             {{ $t('user.login') }}
           </v-btn>
         </v-col>
-        <v-col cols="auto" class="d-none d-md-flex">
+        <v-col v-if="!loggedIn" cols="auto" class="d-none d-md-flex">
           <v-btn
               rounded
               color="primary"
-              @click="$router.push({name: globalRoutes.signUp})"
+              @click="$router.push({name: globalRoutes.signUp}).catch(() => {})"
           >
             {{ $t('user.sign_up') }}
+          </v-btn>
+        </v-col>
+        <v-col v-if="loggedIn" cols="auto" class="d-none d-md-flex">
+          <v-btn
+              rounded
+              color="primary"
+              @click="logout"
+          >
+            {{ $t('user.logout') }}
           </v-btn>
         </v-col>
         <v-col cols="auto" class="d-md-none">
@@ -34,9 +43,9 @@
     <v-navigation-drawer v-model="drawer" absolute temporary right>
       <v-list>
         <v-list-item
-            v-for="item in menuItems"
+            v-for="item in filteredMenuItems"
             :key="item.title"
-            :to="item.path"
+            @click="onMenuItem(item)"
         >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -51,26 +60,45 @@
 
 <script>
 import Logo from "../../views/Global/Logo.vue";
-import {mdiAccount, mdiLogin} from '@mdi/js'
+import {mdiAccount, mdiLogin, mdiLogout} from '@mdi/js'
 import {globalRoutes} from "../../services/routes/consts";
+import {useUserStore} from "../../stores/userStore";
 
 export default {
   name: "Navbar",
-  computed: {
-    globalRoutes() {
-      return globalRoutes
-    }
-  },
   components: {Logo},
   data() {
     return {
       drawer: false,
-      menuItems: [
-        {title: this.$t('user.login'), path: "/login", icon: mdiLogin},
-        {title: this.$t('user.sign_up'), path: "/signup", icon: mdiAccount},
-      ],
     };
   },
+  computed: {
+    globalRoutes() {
+      return globalRoutes
+    },
+    loggedIn() {
+      return !!useUserStore.getters.getToken
+    },
+    filteredMenuItems() {
+      const menuItems =  [
+        {title: this.$t('user.login'), name: globalRoutes.login, icon: mdiLogin, show: !this.loggedIn},
+        {title: this.$t('user.sign_up'), name: globalRoutes.signUp, icon: mdiAccount, show: !this.loggedIn},
+        {title: this.$t('user.logout'), icon: mdiLogout, show: this.loggedIn},
+      ]
+      return menuItems.filter(item => item.show)
+    }
+  },
+  methods: {
+    logout() {
+      useUserStore.dispatch('setToken', "")
+      useUserStore.dispatch('setUserId', "")
+      localStorage.clear();
+      this.drawer = false
+    },
+    onMenuItem(item) {
+      this.loggedIn ? this.logout(): this.$router.push({name: item.name}).catch(() => {})
+    }
+  }
 }
 
 </script>

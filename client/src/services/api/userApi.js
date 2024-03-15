@@ -3,16 +3,16 @@ class UserApi {
         this.$http = $http;
     }
 
-    async login(payload) {
+    async signup(payload) {
         return await this.$http({
-            url: '/users/login',
+            url: 'v1/users/signup',
             method: 'POST',
             data: JSON.stringify(payload)
         })
     }
-    async signup(payload) {
+    async login(payload) {
         return await this.$http({
-            url: '/users/signup',
+            url: 'v1/users/login',
             method: 'POST',
             data: JSON.stringify(payload)
         })

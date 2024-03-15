@@ -13,6 +13,7 @@
                   :label="$t('user.username')+'*'"
                   required
                   :rules="[value => !!(value || '').trim() || $t('rules.required')]"
+                  @input="invalidData = false"
               />
             </v-col>
           </v-row>
@@ -22,16 +23,23 @@
                   v-model="password"
                   :label="$t('user.password')+'*'"
                   type="password"
+                  autocomplete="on"
                   required
                   :rules="[value => !!(value || '').trim() || $t('rules.required')]"
+                  @input="invalidData = false"
               />
             </v-col>
           </v-row>
           <v-row>
-            <v-col class="text-xs-center mt-5">
-              <v-btn color="primary" type="submit" :disabled="!canLogin || loading" @click="signUp">
+            <v-col class="text-xs-center">
+              <v-btn color="primary" type="submit" :disabled="!canLogin || loading" @click="login">
                 {{ $t('user.login') }}
               </v-btn>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="error--text">
+              {{ invalidDataMessage }}
             </v-col>
           </v-row>
         </form>
@@ -41,38 +49,60 @@
 </template>
 
 <script>
+import {globalRoutes} from "../../services/routes/consts";
+import {useUserStore} from "../../stores/userStore";
+
 export default {
   name: "Login",
   data() {
     return {
       username: "",
       password: "",
-      loading: false
+      loading: false,
+      invalidData: false
     }
   },
   computed: {
     canLogin() {
-      return !!this.username && !!this.password;
+      return !!this.username.trim() && !!this.password.trim() && !this.invalidData;
+    },
+    invalidDataMessage() {
+      return this.invalidData ? this.$t('user.incorrect_user_data') : ""
     }
   },
   methods: {
-    async signUp() {
+    async login() {
       try {
         this.loading = true;
         const payload = {
           username: this.username.trim(),
           password: this.password.trim()
         }
-        await this.$api.user.login(payload)
-        this.$eventBus.$emit('toastMessageHandler', {
-          message: this.$t('saved'),
-          type: 'info'
+        const {data} = await this.$api.user.login(payload)
+
+        const token = (data || {}).token;
+        const userId = (data || {}).userId;
+
+        useUserStore.dispatch('setToken', token)
+        useUserStore.dispatch('setUserId', userId)
+        localStorage.setItem('token', token);
+        localStorage.setItem('userId', userId);
+
+        this.$router.push({
+          name: globalRoutes.posts,
         });
+
       } catch (error) {
-        this.$eventBus.$emit('toastMessageHandler', {
-          message: this.$t('something_went_wrong'),
-          type: 'error'
-        });
+        if (error.response.status === 401) {
+          this.invalidData = true
+        } else {
+          this.$eventBus.$emit('toastMessageHandler', {
+            message: this.$t('something_went_wrong'),
+            type: 'error'
+          });
+        }
+      } finally {
+        this.loading = false
       }
     }
   }

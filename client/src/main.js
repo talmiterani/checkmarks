@@ -6,9 +6,11 @@ import {apiFactory, RegisterApi} from './services/api/axios/axios';
 import {EventBusPlugin} from "./plugins/eventBus";
 import router, {setLocalLang} from './router/index'
 import i18n from "./locallization/i18n";
-
+import Vuex from 'vuex';
+import {useUserStore} from "./stores/userStore";
 
 Vue.use(Vuetify)
+Vue.use(Vuex);
 
 const $api = apiFactory();
 Vue.use(RegisterApi($api));
@@ -23,6 +25,7 @@ new Vue({
         },
     }),
     $api,
+    useUserStore,
     router,
     i18n,
     render: h => h(App)
