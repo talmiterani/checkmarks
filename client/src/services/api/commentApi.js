@@ -1,5 +1,4 @@
 import {methods} from "./axios/axios";
-import {getHeaders} from "./axios/service";
 
 class CommentApi {
     constructor($http, headers) {
