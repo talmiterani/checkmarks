@@ -18,7 +18,7 @@
       </v-col>
     </v-row>
     <UpdatedBy
-        :user="'TM'"
+        :user="post.username[0]"
         :author="post.author"
         :updated="post.updated"
     />
@@ -41,7 +41,7 @@
         </v-col>
       </v-row>
 
-      <v-row align="center">
+      <v-row  v-if="loggedIn" align="center" class="pb-12">
         <v-col>
           <v-text-field
               v-model="content"
@@ -53,13 +53,13 @@
           >
             <template v-slot:prepend-inner>
               <v-avatar color="red" class="mr-2">
-                <span class="white--text text-h5">TM</span>
+                <span class="white--text text-h5">{{ useDisplay }}</span>
               </v-avatar>
             </template>
           </v-text-field>
 
         </v-col>
-        <v-col cols="auto" v-if="loggedIn">
+        <v-col cols="auto">
           <v-btn
               rounded
               color="primary"
@@ -92,6 +92,7 @@ import {globalRoutes} from "../../services/routes/consts";
 import {mdiArrowLeft} from "@mdi/js";
 import PageNotFound from "../../views/Global/PageNotFound.vue";
 import {useUserStore} from "../../stores/userStore";
+import {useDisplay} from "../../services/globalService";
 
 export default {
   name: "PostView",
@@ -99,9 +100,7 @@ export default {
   async created() {
     try {
       const {data} = await this.$api.post.get(this.postId)
-      if (!data) {
 
-      }
       this.post = data
     } catch (error) {
       this.$eventBus.$emit('toastMessageHandler', {
@@ -129,6 +128,9 @@ export default {
     },
     backToPostsIcon() {
       return mdiArrowLeft
+    },
+    useDisplay() {
+      return useDisplay(this.post.username[0])
     }
   },
   methods: {
@@ -147,7 +149,6 @@ export default {
       try {
         this.addingComment = true
         const {data} = await this.$api.comment.add({
-          author: "test",//user name,
           content: this.content.trim(),
           post_id: this.postId
         })

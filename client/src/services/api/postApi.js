@@ -1,9 +1,9 @@
 import {methods} from "./axios/axios";
+import {getHeaders} from "./axios/service";
 
 class PostApi {
-    constructor($http, headers) {
+    constructor($http) {
         this.$http = $http;
-        this.headers = headers
     }
 
     async search(payload) {
@@ -20,26 +20,30 @@ class PostApi {
         })
     }
     async add(payload) {
+        const headers =  getHeaders()
         return await this.$http({
             url: '/v1/posts',
             method: methods.post,
-            headers: this.headers,
+            headers: headers,
             data: JSON.stringify(payload)
         })
     }
     async update(payload) {
+        const headers =  getHeaders()
+
         return await this.$http({
             url: '/v1/posts',
             method: methods.put,
-            headers: this.headers,
+            headers: headers,
             data: JSON.stringify(payload)
         })
     }
     async remove(postId) {
+        const headers =  getHeaders()
         return await this.$http({
             url: `/v1/posts/post/${postId}`,
             method: methods.delete,
-            headers: this.headers,
+            headers: headers,
         })
     }
 

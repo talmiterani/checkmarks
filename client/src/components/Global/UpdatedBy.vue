@@ -2,7 +2,7 @@
   <v-row align="center">
     <v-col cols="auto">
       <v-avatar color="red">
-        <span class="white--text text-h5">{{ user }}</span>
+        <span class="white--text text-h5">{{ useDisplay }}</span>
       </v-avatar>
     </v-col>
     <v-col cols="auto" class="font-weight-black pr-2">
@@ -15,6 +15,7 @@
 <script>
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import {useDisplay} from "../../services/globalService";
 dayjs.extend(relativeTime);
 export default {
   name: "UpdatedBy",
@@ -27,7 +28,10 @@ export default {
     parsedUpdated() {
       const currentDate = dayjs();
       return dayjs(this.updated).from(currentDate);
+    },
+    useDisplay() {
+      return useDisplay(this.user)
     }
-  }
+  },
 }
 </script>

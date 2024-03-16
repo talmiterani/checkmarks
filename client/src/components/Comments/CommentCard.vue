@@ -3,14 +3,14 @@
     <v-row>
       <v-col cols="auto">
         <UpdatedBy
-            user="CJ"
+            :user="comment.username"
             :author="comment.author"
             :updated="comment.updated"
         />
       </v-col>
       <v-spacer/>
 
-      <v-col cols="auto">
+      <v-col cols="auto" v-if="comment.userId === userId">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" icon @click.stop="$refs.edit.show()">
@@ -20,7 +20,7 @@
           <span>{{ $t('user.edit', {field: $tc('comment.comment', 1)}) }}</span>
         </v-tooltip>
       </v-col>
-      <v-col cols="auto">
+      <v-col cols="auto" v-if="comment.userId === userId">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" icon @click.stop="$refs.confirm.show()">
@@ -38,6 +38,7 @@
     </v-row>
 
     <editComment
+        v-if="comment.userId === userId"
         edit-mode
         :edit-item="comment.content"
         :comment-id="comment._id"
@@ -46,6 +47,7 @@
     >
     </editComment>
     <ConfirmDialog
+        v-if="comment.userId === userId"
         :on-confirm="remove"
         ref="confirm"
         :message="$t('user.confirm_remove', {field: $tc('comment.comment', 1).toLowerCase()})"
@@ -58,6 +60,7 @@ import UpdatedBy from "../Global/UpdatedBy.vue";
 import ConfirmDialog from "../Global/ConfirmDialog.vue";
 import EditComment from "./EditComment.vue";
 import {mdiDelete, mdiPencil} from "@mdi/js";
+import {useUserStore} from "../../stores/userStore";
 
 export default {
   name: "CommentCard",
@@ -71,7 +74,10 @@ export default {
         edit: mdiPencil,
         remove: mdiDelete
       })
-    }
+    },
+    userId() {
+      return useUserStore.getters.getUserId
+    },
   },
   methods: {
     async remove() {

@@ -1,10 +1,12 @@
 <template>
   <v-app>
     <Navbar/>
-    <v-divider class="mt-1 divider mb-12"/>
-    <v-main>
+    <v-main class="d-flex align-center justify-center">
+      <v-divider class="mt-1 divider mb-12"/>
       <router-view/>
+      <v-divider class="divider mt-12"/>
     </v-main>
+    <Footer/>
     <Toast/>
   </v-app>
 </template>
@@ -14,6 +16,7 @@
 
 import Navbar from "./components/Global/Navbar.vue";
 import {useUserStore} from "./stores/userStore";
+import Footer from "./components/Global/Footer.vue";
 
 const Toast = () => import('./components/Global/Toast') //fixing webpack warning -> https://vueschool.io/articles/vuejs-tutorials/lazy-loading-and-code-splitting-in-vue-js/
 
@@ -25,7 +28,7 @@ export default {
     useUserStore.dispatch('setUserId', userId)
   },
   name: 'App',
-  components: {Navbar, Toast}
+  components: {Footer, Navbar, Toast}
 };
 </script>
 <style>

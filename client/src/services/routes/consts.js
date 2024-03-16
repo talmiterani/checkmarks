@@ -4,5 +4,6 @@ export const globalRoutes = {
     login: "Login",
     signUp: "SignUp",
     posts: "Posts",
-    post: "post"
+    post: "Post",
+    userPosts: "UserPosts"
 };

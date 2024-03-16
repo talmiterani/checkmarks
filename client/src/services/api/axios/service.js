@@ -5,8 +5,6 @@ export function getHeaders() {
     };
     if (token) {
         headers['token'] = `${token}`;
-    } else {
-        throw new Error("token is missing")
     }
     return headers
 }

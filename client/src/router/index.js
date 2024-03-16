@@ -7,6 +7,8 @@ import SignUp from "../components/Users/SignUp.vue";
 import Login from "../components/Users/Login.vue";
 import PostsList from "../components/Posts/PostsList.vue";
 import PostView from "../components/Posts/PostView.vue";
+import UserPosts from "../components/Posts/UserPosts.vue";
+import {useUserStore} from "../stores/userStore";
 
 Vue.use(Router)
 
@@ -34,6 +36,18 @@ const routes = [
         path: '/posts/:post_id',
         name: globalRoutes.post,
         component: PostView,
+    },
+    {
+        path: '/userPosts',
+        name: globalRoutes.userPosts,
+        component: UserPosts,
+        beforeEnter: (to, from, next) => {
+            if (useUserStore.getters.getToken) {
+                next();
+            } else {
+                next({ name: globalRoutes.login });
+            }
+        }
     },
     // {
     //     path: '/:languageCode',

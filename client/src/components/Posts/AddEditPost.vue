@@ -11,37 +11,38 @@
       </v-card-title>
       <v-divider/>
       <v-card-text class="pa-4">
-        <v-row>
-          <v-col class="pb-0">
-            <v-text-field
-                v-model="currentItem.author"
-                :label="$t('post.author')+ '*'"
-                required
-                :rules="[value => !!(value || '').trim() || $t('rules.required')]"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col class="pt-0">
-            <v-text-field
-                v-model="currentItem.title"
-                :label="$t('post.title')+ '*'"
-                required
-                :rules="[value => !!(value || '').trim() || $t('rules.required')]"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-textarea
-                v-model="currentItem.content"
-                :label="$t('post.content')+ '*'"
-                required
-                :rules="[value => !!(value || '').trim() || $t('rules.required')]"
-            />
-          </v-col>
-        </v-row>
-
+        <v-form ref="form">
+          <v-row>
+            <v-col class="pb-0">
+              <v-text-field
+                  v-model="currentItem.author"
+                  :label="$t('post.author')+ '*'"
+                  required
+                  :rules="[value => !!(value || '').trim() || $t('rules.required')]"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="pt-0">
+              <v-text-field
+                  v-model="currentItem.title"
+                  :label="$t('post.title')+ '*'"
+                  required
+                  :rules="[value => !!(value || '').trim() || $t('rules.required')]"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-textarea
+                  v-model="currentItem.content"
+                  :label="$t('post.content')+ '*'"
+                  required
+                  :rules="[value => !!(value || '').trim() || $t('rules.required')]"
+              />
+            </v-col>
+          </v-row>
+        </v-form>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -91,10 +92,13 @@ export default {
   },
   methods: {
     show() {
-      if (this.editMode) {
-        this.currentItem = {...this.editItem}
-      }
       this.dialog = true
+      this.$nextTick(() => {
+        this.$refs.form.reset()
+        if (this.editMode) {
+          this.currentItem = {...this.editItem}
+        }
+      })
     },
     async save() {
 

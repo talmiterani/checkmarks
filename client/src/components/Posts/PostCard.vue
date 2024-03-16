@@ -7,16 +7,16 @@
           :max-height="250"
   >
     <v-row>
-      <v-col>
+      <v-col cols="auto">
         <UpdatedBy
-            user="CJ"
+            :user="post.username"
             :author="post.author"
             :updated="post.updated"
         />
       </v-col>
       <v-spacer/>
 
-      <v-col cols="auto">
+      <v-col cols="auto" v-if="loggedIn && userId">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" icon @click.stop="$refs.edit.show()">
@@ -26,7 +26,7 @@
           <span>{{ $t('user.edit', {field: $tc('post.post', 1)}) }}</span>
         </v-tooltip>
       </v-col>
-      <v-col cols="auto">
+      <v-col cols="auto" v-if="loggedIn && userId">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" icon @click.stop="$refs.confirm.show()">
@@ -55,11 +55,12 @@
         <v-icon  color="grey darken-1"> {{ icons.comment }}</v-icon>
       </v-col>
       <div class="grey--text text--darken-1">
-      {{ `${post.comments_cnt} ${$tc('comment.comment', 2)}`}}
+      {{ `${post.comments_cnt || 0} ${$tc('comment.comment', 2)}`}}
       </div>
     </v-row>
 
     <AddEditPost
+        v-if="loggedIn && userId"
         edit-mode
         :edit-item="post"
         ref="edit"
@@ -67,6 +68,7 @@
     >
     </AddEditPost>
     <ConfirmDialog
+        v-if="loggedIn && userId"
         :on-confirm="remove"
         ref="confirm"
         :message="$t('user.confirm_remove', {field: $tc('post.post', 1).toLowerCase()})"
@@ -81,12 +83,14 @@ import {globalRoutes} from "../../services/routes/consts";
 import UpdatedBy from "../Global/UpdatedBy.vue";
 import AddEditPost from "./AddEditPost.vue";
 import ConfirmDialog from "../Global/ConfirmDialog.vue";
+import {useUserStore} from "../../stores/userStore";
 
 export default {
   name: "PostCard",
   components: {ConfirmDialog, AddEditPost, UpdatedBy},
   props: {
     post: Object,
+    userId: String
   },
   computed: {
     icons() {
@@ -95,7 +99,10 @@ export default {
         edit: mdiPencil,
         remove: mdiDelete
       })
-    }
+    },
+    loggedIn() {
+      return !!useUserStore.getters.getToken
+    },
   },
   methods: {
     goToPost() {

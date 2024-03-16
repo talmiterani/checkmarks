@@ -5,6 +5,7 @@ const messages = {
     search: "Search",
     no_data: "No data",
     back_to: "Back to {field}",
+    footer: "© 2023 Relume. All rights reserved.",
     user: {
         username: "Username",
         username_exists: "Username is already exists",
@@ -14,6 +15,7 @@ const messages = {
         login: "Login",
         sign_up: "Sign up",
         logout: "Logout",
+        user_posts: "My posts",
         add: "Add {field}",
         edit: "Edit {field}",
         remove: "Remove {field}",
