@@ -10,7 +10,7 @@
       </v-col>
       <v-spacer/>
 
-      <v-col cols="auto" v-if="comment.userId === userId">
+      <v-col cols="auto" v-if="comment.user_id === userId">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" icon @click.stop="$refs.edit.show()">
@@ -20,7 +20,7 @@
           <span>{{ $t('user.edit', {field: $tc('comment.comment', 1)}) }}</span>
         </v-tooltip>
       </v-col>
-      <v-col cols="auto" v-if="comment.userId === userId">
+      <v-col cols="auto" v-if="comment.user_id === userId">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" icon @click.stop="$refs.confirm.show()">
@@ -38,16 +38,16 @@
     </v-row>
 
     <editComment
-        v-if="comment.userId === userId"
+        v-if="comment.user_id === userId"
         edit-mode
         :edit-item="comment.content"
-        :comment-id="comment._id"
+        :comment-id="comment._id || comment.id"
         ref="edit"
-        @saved="$emit('updated', $event)"
+        @saved="$emit('updated', {...$event,  user_id: comment.user_id})"
     >
     </editComment>
     <ConfirmDialog
-        v-if="comment.userId === userId"
+        v-if="comment.user_id === userId"
         :on-confirm="remove"
         ref="confirm"
         :message="$t('user.confirm_remove', {field: $tc('comment.comment', 1).toLowerCase()})"
@@ -83,7 +83,7 @@ export default {
     async remove() {
       let success = false;
       try {
-        await this.$api.comment.remove(this.comment.id)
+        await this.$api.comment.remove(this.comment._id || this.comment.id)
         this.$emit('removed')
         success = true;
         this.$eventBus.$emit("toastMessageHandler", {
@@ -92,7 +92,7 @@ export default {
         });
       } catch (e) {
         this.$eventBus.$emit('toastMessageHandler', {
-          message: this.$t('general.something_went_wrong'),
+          message: this.$t('something_went_wrong'),
           type: 'error'
         });
       }

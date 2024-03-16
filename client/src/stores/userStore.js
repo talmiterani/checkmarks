@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export const useUserStore = new Vuex.Store({
     state: {
         token: "",
-        userId: ""
+        userId: "",
+        username: ""
     },
     mutations: {
         setToken (state, token) {
@@ -14,6 +15,9 @@ export const useUserStore = new Vuex.Store({
         },
         setUserId (state, userId) {
             state.userId = userId
+        },
+        setUsername (state, username) {
+            state.username= username
         }
     },
     actions: {
@@ -22,6 +26,9 @@ export const useUserStore = new Vuex.Store({
         },
         setUserId ({commit}, userId) {
             commit('setUserId', userId)
+        },
+        setUsername ({commit}, username) {
+            commit('setUsername', username)
         }
     },
     getters: {
@@ -30,6 +37,9 @@ export const useUserStore = new Vuex.Store({
         },
         getUserId: state => {
             return state.userId
+        },
+        getUsername: state => {
+            return state.username
         }
     }
 })

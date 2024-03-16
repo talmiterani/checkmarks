@@ -18,7 +18,7 @@
       </v-col>
     </v-row>
     <UpdatedBy
-        :user="post.username[0]"
+        :user="post.postUsername[0]"
         :author="post.author"
         :updated="post.updated"
     />
@@ -53,7 +53,7 @@
           >
             <template v-slot:prepend-inner>
               <v-avatar color="red" class="mr-2">
-                <span class="white--text text-h5">{{ useDisplay }}</span>
+                <span v-if="!loading" class="white--text text-h5">{{ useDisplay }}</span>
               </v-avatar>
             </template>
           </v-text-field>
@@ -71,7 +71,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-row v-for="(comment, index) in (post || {}).comments" :key="comment.id">
+    <v-row  v-for="(comment, index) in (post || {}).comments" :key="comment._id">
       <v-col>
         <v-divider v-if="index" class="mt-5 mb-8"/>
         <CommentCard
@@ -100,8 +100,9 @@ export default {
   async created() {
     try {
       const {data} = await this.$api.post.get(this.postId)
+      this.post = data || {}
+      this.post.comments = (this.post.comments || []).filter(value => Object.keys(value).length !== 0);
 
-      this.post = data
     } catch (error) {
       this.$eventBus.$emit('toastMessageHandler', {
         message: this.$t('something_went_wrong'),
@@ -130,8 +131,8 @@ export default {
       return mdiArrowLeft
     },
     useDisplay() {
-      return useDisplay(this.post.username[0])
-    }
+      return useDisplay(useUserStore.getters.getUsername)
+    },
   },
   methods: {
     backToPosts() {
@@ -143,7 +144,7 @@ export default {
       this.post.comments.splice(index, 1)
     },
     update(comment, index) {
-      this.$set(this.post.comments, index, comment)
+      this.$set(this.post.comments, index, {...comment,username: useUserStore.getters.getUsername})
     },
     async addComment() {
       try {
@@ -153,10 +154,10 @@ export default {
           post_id: this.postId
         })
         if (!(this.post.comments || []).length) this.post.comments = []
-        this.post.comments.unshift(data)
+        this.post.comments.unshift({...data, username: useUserStore.getters.getUsername})
         this.content = ""
         this.$eventBus.$emit('toastMessageHandler', {
-          message: this.$t('user.saved', this.$tc('comment.comment', 1)),
+          message: this.$t('user.saved', {field: this.$tc('comment.comment', 1)}),
           type: 'info'
         });
       } catch (error) {

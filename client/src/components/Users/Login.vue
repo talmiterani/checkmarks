@@ -85,8 +85,12 @@ export default {
 
         useUserStore.dispatch('setToken', token)
         useUserStore.dispatch('setUserId', userId)
+        useUserStore.dispatch('setUsername', payload.username)
+
         localStorage.setItem('token', token);
         localStorage.setItem('userId', userId);
+        localStorage.setItem('username', payload.username);
+
 
         this.$router.push({
           name: globalRoutes.posts,

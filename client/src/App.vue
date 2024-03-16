@@ -24,8 +24,12 @@ export default {
   created() {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
+
     useUserStore.dispatch('setToken', token)
     useUserStore.dispatch('setUserId', userId)
+    useUserStore.dispatch('setUsername', username)
+
   },
   name: 'App',
   components: {Footer, Navbar, Toast}

@@ -69,8 +69,8 @@ export default {
   },
   methods: {
     show() {
-      this.currentItem = this.editItem
       this.dialog = true
+      this.$nextTick(() =>  this.currentItem = this.editItem)
     },
     async save() {
 
@@ -85,7 +85,11 @@ export default {
           message: this.$t('user.saved', {field: this.$tc('comment.comment', 1)}),
           type: 'info'
         });
-        this.$emit('saved', {content: trimmedVal, id: this.commentId, updated: data.updated})
+        this.$emit('saved', {
+          content: trimmedVal,
+          _id: this.commentId,
+          updated: data.updated
+        })
         this.dialog = false
       } catch (error) {
         this.$eventBus.$emit('toastMessageHandler', {
