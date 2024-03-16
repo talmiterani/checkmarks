@@ -8,7 +8,6 @@ import Login from "../components/Users/Login.vue";
 import PostsList from "../components/Posts/PostsList.vue";
 import PostView from "../components/Posts/PostView.vue";
 import UserPosts from "../components/Posts/UserPosts.vue";
-import {useUserStore} from "../stores/userStore";
 
 Vue.use(Router)
 
@@ -42,7 +41,8 @@ const routes = [
         name: globalRoutes.userPosts,
         component: UserPosts,
         beforeEnter: (to, from, next) => {
-            if (useUserStore.getters.getToken) {
+            const token = localStorage.getItem('token');
+            if (token) {
                 next();
             } else {
                 next({ name: globalRoutes.login });
