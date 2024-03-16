@@ -1,8 +1,9 @@
 import {methods} from "./axios/axios";
 
 class PostApi {
-    constructor($http) {
+    constructor($http, headers) {
         this.$http = $http;
+        this.headers = headers
     }
 
     async search(payload) {
@@ -22,6 +23,7 @@ class PostApi {
         return await this.$http({
             url: '/v1/posts',
             method: methods.post,
+            headers: this.headers,
             data: JSON.stringify(payload)
         })
     }
@@ -29,6 +31,7 @@ class PostApi {
         return await this.$http({
             url: '/v1/posts',
             method: methods.put,
+            headers: this.headers,
             data: JSON.stringify(payload)
         })
     }
@@ -36,6 +39,7 @@ class PostApi {
         return await this.$http({
             url: `/v1/posts/post/${postId}`,
             method: methods.delete,
+            headers: this.headers,
         })
     }
 
