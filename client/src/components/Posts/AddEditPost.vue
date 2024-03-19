@@ -94,9 +94,11 @@ export default {
     show() {
       this.dialog = true
       this.$nextTick(() => {
-        this.$refs.form.reset()
         if (this.editMode) {
+          this.$refs.form.resetValidation()
           this.currentItem = {...this.editItem}
+        } else {
+          this.$refs.form.reset()
         }
       })
     },
