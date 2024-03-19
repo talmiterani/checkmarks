@@ -1,6 +1,6 @@
 <template>
-  <div class="py-2 px-8"a>
-    <v-app-bar flat app color="white">
+  <div class="py-2 px-8">
+    <v-app-bar flat  color="white">
       <v-row align="center">
         <v-col cols="auto">
           <Logo/>
@@ -123,9 +123,6 @@ export default {
 
 
 <style scoped>
-.d-lg-none {
-  display: none !important;
-}
 
 .d-none {
   display: none !important;

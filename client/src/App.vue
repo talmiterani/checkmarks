@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <Navbar/>
-    <v-main class="d-flex align-center justify-center">
+    <v-main>
       <v-divider class="mt-1 divider mb-12"/>
       <router-view/>
-      <v-divider class="divider mt-12"/>
     </v-main>
+    <v-divider class="divider mt-5"/>
     <Footer/>
     <Toast/>
   </v-app>
